@@ -1,0 +1,31 @@
+{
+    "rules": [
+        {
+            "name": "Block SSH to Server",
+            "src_ip": "any",
+            "dst_ip": "10.0.0.100",
+            "protocol": "tcp",
+            "dst_port": 22,
+            "action": "deny",
+            "description": "禁止任何主機通過SSH連接伺服器"
+        },
+        {
+            "name": "Allow HTTP",
+            "src_ip": "any",
+            "dst_ip": "any",
+            "protocol": "tcp",
+            "dst_port": 80,
+            "action": "allow",
+            "description": "允許HTTP流量"
+        },
+        {
+            "name": "Allow HTTPS",
+            "src_ip": "any",
+            "dst_ip": "any",
+            "protocol": "tcp",
+            "dst_port": 443,
+            "action": "allow",
+            "description": "允許HTTPS流量"
+        }
+    ]
+}

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDN 虛擬交換機管理器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .switch-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .switch-item {
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 15px;
+            position: relative;
+            border-left: 5px solid #3498db;
+        }
+        .switch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .switch-id {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .switch-ports {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .port {
+            background-color: #edf2f7;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .virtual-badge {
+            background-color: #8e44ad;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .status.active {
+            background-color: #2ecc71;
+        }
+        .status.inactive {
+            background-color: #e74c3c;
+        }
+        .quick-create {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: #3498db;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>SDN 虛擬交換機管理器</h1>
+    <p>使用此界面創建和管理虛擬 SDN 交換機以進行測試和開發。</p>
+
+    <div class="container">
+        <div class="card">
+            <h2>創建虛擬交換機</h2>
+            <form id="switchForm">
+                <div class="form-group">
+                    <label for="dpid">數據平面 ID (DPID):</label>
+                    <input type="text" id="dpid" name="dpid" placeholder="例如：0000000000000001" pattern="[0-9a-fA-F]{16}">
+                    <small>16 位十六進制數字 (可選，留空將自動生成)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="ports">端口數量:</label>
+                    <input type="number" id="ports" name="ports" min="1" max="64" value="4">
+                </div>
+
+                <button type="submit" id="createBtn">創建交換機</button>
+                <span id="createLoading" class="loading" style="display: none;"></span>
+            </form>
+
+            <h3>快速創建多個交換機</h3>
+            <div class="quick-create">
+                <button id="create3Btn">創建 3 個交換機</button>
+                <button id="create5Btn">創建 5 個交換機</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>已連接的交換機 <button id="refreshBtn" style="float: right; font-size: 14px;">刷新</button></h2>
+            <div id="switchList" class="switch-list">
+                <div style="grid-column: 1/-1; text-align: center; padding: 20px;">
+                    載入中...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+        
+        // 加載交換機列表
+        function loadSwitches() {
+            fetch(`${API_URL}/api/v1/switches`)
+                .then(response => response.json())
+                .then(data => {
+                    const switchListEl = document.getElementById('switchList');
+                    
+                    if (!data.switches || data.switches.length === 0) {
+                        switchListEl.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px;">沒有找到交換機。請創建一個新的交換機。</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    data.switches.forEach(sw => {
+                        let portsHtml = '';
+                        const portCount = Object.keys(sw.ports || {}).length;
+                        
+                        for (let i = 1; i <= Math.min(portCount, 4); i++) {
+                            const port = sw.ports[i] || { name: `port${i}` };
+                            portsHtml += `<span class="port">${port.name}</span>`;
+                        }
+                        
+                        if (portCount > 4) {
+                            portsHtml += `<span class="port">+${portCount-4} 更多</span>`;
+                        }
+                        
+                        html += `
+                            <div class="switch-item">
+                                <div class="switch-header">
+                                    <span class="switch-id">${sw.id}</span>
+                                    <span class="virtual-badge">虛擬</span>
+                                </div>
+                                <div>
+                                    <span class="status ${sw.is_active ? 'active' : 'inactive'}"></span>
+                                    ${sw.is_active ? '活躍' : '非活躍'}
+                                </div>
+                                <div>IP: ${sw.address}</div>
+                                <div>添加時間: ${sw.added_at || '未知'}</div>
+                                <div class="switch-ports">
+                                    ${portsHtml}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    switchListEl.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error fetching switches:', error);
+                    document.getElementById('switchList').innerHTML = 
+                        '<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #e74c3c;">無法載入交換機列表。請確保 SDN 控制器正在運行。</div>';
+                });
+        }
+        
+        // 創建交換機
+        function createSwitch(dpid, ports) {
+            const createLoading = document.getElementById('createLoading');
+            createLoading.style.display = 'inline-block';
+            
+            fetch(`${API_URL}/api/v1/test/switches`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    dpid: dpid || undefined,
+                    ports: parseInt(ports) || 4
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                createLoading.style.display = 'none';
+                if (data.success) {
+                    alert(`交換機創建成功！ID: ${data.switch.id}`);
+                    loadSwitches();
+                } else {
+                    alert(`創建交換機失敗: ${data.message || '未知錯誤'}`);
+                }
+            })
+            .catch(error => {
+                createLoading.style.display = 'none';
+                console.error('Error creating switch:', error);
+                alert('創建交換機時發生錯誤。請檢查控制台以獲取更多信息。');
+            });
+        }
+        
+        // 創建多個交換機
+        function createMultipleSwitches(count) {
+            let created = 0;
+            const total = count;
+            
+            function createNext() {
+                if (created < total) {
+                    createSwitch(null, 4);
+                    created++;
+                    setTimeout(createNext, 500);
+                }
+            }
+            
+            createNext();
+        }
+        
+        // 事件監聽器
+        document.addEventListener('DOMContentLoaded', () => {
+            // 載入初始交換機列表
+            loadSwitches();
+            
+            // 表單提交
+            document.getElementById('switchForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const dpid = document.getElementById('dpid').value;
+                const ports = document.getElementById('ports').value;
+                createSwitch(dpid, ports);
+            });
+            
+            // 刷新按鈕
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                loadSwitches();
+            });
+            
+            // 快速創建按鈕
+            document.getElementById('create3Btn').addEventListener('click', () => {
+                createMultipleSwitches(3);
+            });
+            
+            document.getElementById('create5Btn').addEventListener('click', () => {
+                createMultipleSwitches(5);
+            });
+        });
+    </script>
+</body>
+</html>
