@@ -1,0 +1,15 @@
+{
+  "total_packets": 100,
+  "attack_types": {
+    "TCP_attacks": 50,
+    "UDP_attacks": 30,
+    "ICMP_attacks": 20
+  },
+  "target_analysis": {
+    "127.0.0.1": 100
+  },
+  "timing_info": {
+    "generation_time": "2025-06-02T22:37:16.298033",
+    "filename": "quick_test_ddos.pcap"
+  }
+}

@@ -349,9 +349,19 @@ def main():
     # 創建網絡 - 使用遠程控制器和OpenFlow 1.3
     info('*** 創建網絡\n')
     # 使用特定的控制器 IP 和端口
-    controller_ip = "192.168.1.102"
+    controller_ip = "10.101.14.185"
     controller_port = 6653
-    info(f'*** 連接到控制器 {controller_ip}:{controller_port}\n')
+    
+    # 顯示SDN控制器信息
+    info('*' * 60 + '\n')
+    info('🌐 SDN 控制器資訊\n')
+    info('*' * 60 + '\n')
+    info(f'📍 控制器 IP 地址: {controller_ip}\n')
+    info(f'🔗 控制器端口: {controller_port}\n')
+    info(f'📡 OpenFlow 協議: 1.3\n')
+    info('*' * 60 + '\n')
+    
+    info(f'*** 正在連接到 SDN 控制器 {controller_ip}:{controller_port}\n')
     
     net = Mininet(topo=topo, controller=RemoteController('c0', ip=controller_ip, port=controller_port),
                   switch=OVSKernelSwitch, autoSetMacs=True, link=TCLink)
@@ -369,6 +379,10 @@ def main():
     # 等待控制器初始化完成
     info('*** 等待控制器初始化 (5秒)...\n')
     time.sleep(5)
+    
+    # 檢查控制器連接狀態
+    info('*** 檢查控制器連接狀態\n')
+    check_controller_connection(net, controller_ip, controller_port)
     
     # 根據指定的測試運行相應功能
     if args.test == 'all' or args.test == 'basic':

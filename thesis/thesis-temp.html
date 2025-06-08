@@ -1,0 +1,235 @@
+<!DOCTYPE html><html><head>
+      <title>thesis-temp</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////Users/yang/.cursor/extensions/shd101wyy.markdown-preview-enhanced-0.8.18/crossnote/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="應用-sdn-實現針對-ai-生成惡意流量之自適應防禦架構">應用 SDN 實現針對 AI 生成惡意流量之自適應防禦架構 </h1>
+<h2 id="adaptive-defense-architecture-for-ai-generated-malicious-traffic-based-on-sdn">Adaptive Defense Architecture for AI-Generated Malicious Traffic Based on SDN </h2>
+<h2 id="abstract">Abstract </h2>
+<p>With the advancement of AI technology, cyber attackers are increasingly leveraging generative AI to automate social engineering, malware creation, phishing attacks, and adversarial threats. Traditional security measures struggle to keep up with these evolving attack vectors, necessitating adaptive and intelligent defense mechanisms. Software-Defined Networking (SDN) offers a dynamic approach to traffic monitoring and anomaly detection, making it a promising solution against AI-generated cyber threats.</p>
+<p>This study explores the security risks posed by generative AI, focusing on its applications in cyberattacks such as deepfake-driven fraud, AI-enhanced phishing, adversarial machine learning attacks, and automated malware obfuscation. In response, we propose an SDN-based adaptive defense architecture capable of detecting and mitigating AI-generated malicious traffic. By integrating centralized control, anomaly detection, and AI-enhanced security policies, SDN can dynamically analyze and respond to emerging threats in real time. This research highlights the necessity of an AI-aware cybersecurity framework that leverages SDN for proactive defense, ensuring network resilience against the rapid evolution of AI-driven cyber threats.</p>
+<p><strong>Keywords</strong>: Software-Defined Networking (SDN), Generative AI, Cybersecurity, Anomaly detection, Adaptive defense, AI-generated traffic, Adversarial machine learning, Network resilience.</p>
+<h2 id="introduction">Introduction </h2>
+<p>The rapid advancement of artificial intelligence (AI) has revolutionized various industries, providing unprecedented efficiency and automation. However, this progress has also introduced new security challenges [1, 2]. In recent years, cybercriminals have begun leveraging generative AI models to automate and enhance their attacks, making them more sophisticated and difficult to detect [1, 3]. From AI-generated phishing emails and deepfake scams to automated malware creation and adversarial attacks against machine learning systems, the cybersecurity landscape is facing an evolving set of AI-driven threats [1, 3, 4].</p>
+<p>One notable incident underscoring this growing threat is a recent cyberattack in which a group of high school students exploited generative AI tools to breach a major telecommunications provider. Using AI-assisted scripting, they successfully infiltrated the system, stole hundreds of thousands of user credentials, and fraudulently activated SIM cards for illicit profit [5]. This case highlights the increasing accessibility of AI-powered hacking techniques and the urgent need for adaptive cybersecurity solutions [2, 6].</p>
+<p>Traditional network security mechanisms struggle to cope with these emerging threats due to their reactive nature and static rule-based approaches [2]. To address this, Software-Defined Networking (SDN) presents a promising alternative by enabling dynamic traffic analysis, centralized control, and intelligent anomaly detection [4, 6, 7]. SDN's ability to adaptively respond to network threats in real time makes it an ideal foundation for mitigating AI-generated cyberattacks [4, 8].</p>
+<p>This study aims to analyze the role of generative AI in modern cyber threats and propose an SDN-based adaptive defense architecture to counter AI-generated malicious traffic [4, 7]. By integrating AI-enhanced anomaly detection techniques with SDN's programmable framework, we seek to develop a proactive defense mechanism capable of detecting, analyzing, and mitigating evolving AI-driven cyber threats [6, 8].</p>
+<h3 id="11-generative-ai-genai-in-cybersecurity-attacks">1.1 Generative AI (GenAI) in Cybersecurity Attacks </h3>
+<p>Generative AI (GenAI) is no longer confined to creative domains such as text or image generation; it is increasingly being exploited as a tool for launching sophisticated cyberattacks [1, 3]. Malicious actors are leveraging GenAI to automate and enhance various attack vectors—crafting highly convincing phishing emails, generating deepfake videos and audio, writing obfuscated malware code, and even launching social engineering campaigns with unprecedented realism [3, 8].</p>
+<p>By utilizing Large Language Models (LLMs) like ChatGPT or open-source alternatives, attackers can generate convincing natural language content to manipulate users or automate parts of the hacking process [3, 5]. This democratization of advanced attack capabilities has significantly lowered the barrier to entry for cybercriminals, allowing even low-skill actors to execute complex threats [3, 5].</p>
+<p>In this context, understanding how GenAI is being weaponized for cyberattacks is crucial. The dynamic and deceptive nature of GenAI-generated content presents unique challenges to traditional detection systems, making it necessary to explore adaptive, intelligence-driven security solutions that can detect and counter AI-powered threats effectively [2, 3, 7].</p>
+<h3 id="12-software-defined-networking-sdn-in-cybersecurity-defense">1.2 Software-Defined Networking (SDN) in Cybersecurity Defense </h3>
+<p>As AI-powered threats evolve in complexity and speed, traditional static security measures—such as rule-based firewalls and intrusion detection systems—often fall short [2, 6]. Software-Defined Networking (SDN) offers a promising alternative by enabling real-time adaptability and centralized control in network defense strategies [4, 6, 7].</p>
+<p>SDN's architecture decouples the control plane from the data plane, allowing a central controller to dynamically manage network behavior. This centralization is particularly advantageous for cybersecurity, as it facilitates real-time traffic monitoring, rapid policy enforcement, and seamless integration with AI-driven anomaly detection systems [3, 6].</p>
+<p>In practical applications, SDN can detect and respond to malicious traffic patterns—such as those generated by GenAI-driven attacks—by dynamically rerouting traffic, isolating compromised segments, or deploying targeted countermeasures [4, 7]. Its programmable nature allows for the implementation of proactive security mechanisms that evolve alongside emerging threats [4, 6, 8].</p>
+<p>This study focuses on leveraging the programmability of SDN in conjunction with AI-enhanced detection methods to build an adaptive defense architecture. The goal is to create a responsive and resilient cybersecurity framework capable of mitigating the growing wave of AI-generated threats in real time [4, 6, 7].</p>
+<h3 id="13-paper-organization">1.3 Paper Organization </h3>
+<p>(待補)</p>
+<h3 id="background">Background </h3>
+<h3 id="21-generative-ai-in-cybersecurity">2.1 Generative AI in Cybersecurity </h3>
+<p>In recent years, generative artificial intelligence (GenAI) has expanded from creative domains such as text or image generation to applications in cybersecurity attacks. Research shows that attackers can leverage large language models (LLMs) like ChatGPT to automatically generate convincing phishing emails [1, 3], craft deepfake videos and audio, write obfuscated malware code, and even launch social engineering campaigns with unprecedented realism [3, 4].</p>
+<p>Zhang et al. [1] highlighted that generative models could be used to disseminate fake news on a large scale, further confusing public perception and decision-making. Their research demonstrated how AI systems could generate news articles that humans found credible, raising concerns about misinformation campaigns. Apruzzese et al. [3] analyzed how attackers use machine learning to enhance phishing emails, making them more difficult for traditional email filters to detect. Their experiments showed significant increases in success rates of AI-enhanced attacks compared to traditional ones.</p>
+<h3 id="22-adversarial-attacks-and-ai-based-threats">2.2 Adversarial Attacks and AI-based Threats </h3>
+<p>In addition to directly generating attack content, adversarial attacks have become a major focus of AI cybersecurity research. These attacks subtly modify input data to cause machine learning models to make incorrect judgments, thereby bypassing security detection systems [3]. Apruzzese et al. [3] showed that machine learning-based security systems can be vulnerable to evasion techniques, even when paired with existing defense mechanisms. Their work demonstrated that AI-generated content could be modified with imperceptible perturbations that confuse detection systems while preserving human readability.</p>
+<p>Ahmad et al. [2] introduced a taxonomy of security challenges in software-defined networks, categorizing them by attack surface, technique, and impact level. They identified that attacks targeting the SDN control plane present the greatest challenge to modern defense systems. Kreutz et al. [6] conducted comprehensive analysis showing how SDN architectures can be secured against various attack vectors through proper design and implementation.</p>
+<h3 id="23-software-defined-networking-sdn-for-security">2.3 Software-Defined Networking (SDN) for Security </h3>
+<p>As AI-powered threats evolve in complexity and speed, traditional static security measures—such as rule-based firewalls and intrusion detection systems—often fall short [3, 7]. Software-Defined Networking (SDN) offers a promising alternative by enabling real-time adaptability and centralized control in network defense strategies [4, 6].</p>
+<p>SDN's architecture decouples the control plane from the data plane, allowing a central controller to dynamically manage network behavior. This centralization is particularly advantageous for cybersecurity, as it facilitates real-time traffic monitoring, rapid policy enforcement, and seamless integration with AI-driven anomaly detection systems [4, 6]. Kreutz et al. [6] outlined the fundamental security benefits of SDN, highlighting its ability to provide network-wide visibility and responsive policy implementation.</p>
+<p>In practical applications, SDN can detect and respond to malicious traffic patterns, such as those generated by GenAI-driven attacks, by dynamically rerouting traffic, isolating compromised segments, or deploying targeted countermeasures [4, 6]. Its programmable nature allows for the implementation of proactive security mechanisms that evolve alongside emerging threats [7, 8]. Scott-Hayward et al. [7] demonstrated how SDN security frameworks can significantly reduce attack surface through dynamic network reconfiguration during active attacks.</p>
+<p>Sahu et al. [4] proposed frameworks for integrating machine learning with SDN to create effective intrusion detection systems. Their approach showed promising results, with detection rates improving significantly compared to traditional methods. Similarly, Mijumbi et al. [9] explored network function virtualization approaches that could coordinate defense actions across multi-domain networks, providing coherent protection against distributed attacks.</p>
+<h3 id="24-summary-and-research-gap">2.4 Summary and Research Gap </h3>
+<p>In summary, generative AI has proven to be a versatile tool in cyberattacks, with applications ranging from phishing emails to Deepfake fraud and adversarial attacks [1, 3, 4]. While SDN presents a promising solution for dynamic defense, with initial attempts to integrate AI models into SDN frameworks [4, 6, 7], there remains a gap in research specifically targeting a comprehensive SDN-based defense architecture against GenAI-driven threats.</p>
+<p>Most existing studies focus on individual threat types or isolated defense layers, with a lack of a unified platform capable of detecting and responding to multi-dimensional GenAI-based attacks, such as those involving LLMs, Deepfakes, or adversarial examples. Ahmad et al. [2] reviewed numerous SDN security frameworks and found that few addressed AI-generated threats specifically, highlighting this research gap. Mijumbi et al. [9] noted that current defense systems typically operate in silos, with limited information sharing between detection and response components.</p>
+<p>Therefore, this research will focus on designing an SDN-based adaptive defense architecture that integrates AI-driven anomaly detection to proactively detect and mitigate emerging GenAI cyber threats [4, 6, 7]. The proposed framework will aim to overcome the limitations identified in current research, emphasizing the need for cross-domain threat intelligence and coordinated response mechanisms in defending against increasingly sophisticated AI-enabled attacks.</p>
+<h2 id="methodology">Methodology </h2>
+<h3 id="31-ai-driven-intelligent-defense-for-sdn-aid-sdn">3.1 AI-Driven Intelligent Defense for SDN (AID-SDN) </h3>
+<p><img src="img/new_ai_model.png" alt="ai_model"><br>
+<em>Figure 3.1: AI-Driven Intelligent Defense for SDN (AID-SDN)</em></p>
+<p>The proposed AID-SDN architecture significantly advances existing SDN security frameworks by specifically addressing the emerging challenges posed by AI-generated threats. Building upon Wang et al.'s [12] Software-Defined Security Networking Mechanism, our architecture implements a multi-layered, hierarchical approach to threat detection with specialized modules designed to identify and mitigate sophisticated GenAI attack patterns. Unlike conventional SDN security approaches that rely primarily on static rule sets, our model incorporates advanced detection mechanisms specifically calibrated for LLM-generated content, adversarial perturbations, and polymorphic attack signatures that evade traditional detection systems.</p>
+<p>Our implementation strategy is informed by McKeown et al.'s [13] groundbreaking work on rapid prototyping methodologies for SDN environments. We extend this foundation by seamlessly integrating AI-powered analysis modules directly within the SDN controller framework, creating a unified defense system capable of real-time threat identification, classification, and adaptive response. This integration enables not only detection of anomalies but also intelligent traffic management decisions based on comprehensive threat assessment and confidence scoring.</p>
+<h3 id="32-adaptive-defense-flow-based-on-sdn-and-ai">3.2 Adaptive Defense Flow Based on SDN and AI </h3>
+<p><img src="img/flow_chart.png" alt="flow_chart"><br>
+<em>Figure 3.2: GPT-driven Attack Generation Framework for SDN Defense Evaluation</em></p>
+<p>Our adaptive defense flow incorporates network anomaly detection methods outlined by Bhuyan et al. [12], particularly their statistical and machine learning-based approaches for identifying deviations from normal traffic patterns. However, we extend these techniques to specifically target the unique characteristics of AI-generated malicious traffic.</p>
+<p>The defense flow implements a multi-stage detection process similar to the DDoS defense mechanisms proposed by Swami et al. [13], but with significant adaptations for GenAI-specific traffic patterns. As illustrated in Figure 3.1, the system continuously monitors network traffic through the SDN data plane, with suspicious flows directed to specialized analysis modules.</p>
+<p>For traffic analysis, we incorporate feature selection techniques similar to Wang et al.'s [14] dynamic MLP-based approach, which demonstrated 98% accuracy in identifying DDoS attacks through an optimized feedback mechanism. Our implementation adapts this approach for identifying linguistic patterns and behavioral signatures characteristic of LLM-generated attack content.</p>
+<p>The adaptive defense flow consists of five key stages:</p>
+<ol>
+<li>
+<p><strong>Attack Generation and Simulation</strong>: Modern AI models (ChatGPT, Claude, Grok AI, Gemini, and DeepSeek) automatically generate diverse attack scripts targeting various network vulnerabilities. These scripts are deployed within a Mininet environment that simulates real-world network conditions, creating a controlled testbed for evaluating defense mechanisms.</p>
+</li>
+<li>
+<p><strong>Traffic Monitoring and Analysis</strong>: The SDN controller continuously monitors network traffic patterns, collecting flow statistics and packet metadata. This centralized approach provides comprehensive visibility across the entire network, addressing the limitations of traditional distributed security systems identified by Kreutz et al. [6].</p>
+</li>
+<li>
+<p><strong>AI-Enhanced Anomaly Detection</strong>: Real-time traffic data is processed by our machine learning model, which has been trained to identify patterns characteristic of AI-generated attacks. Building on Rosenberg et al.'s [8] deep learning approach to attack attribution, our model recognizes subtle linguistic and behavioral markers that distinguish AI-generated malicious traffic from legitimate traffic.</p>
+</li>
+<li>
+<p><strong>Automated Response Deployment</strong>: Upon detection of anomalous traffic, the SDN controller dynamically generates and deploys defense rules throughout the network. This automated response mechanism significantly reduces the time between attack detection and mitigation, addressing the rapid evolution of AI-generated threats highlighted by Apruzzese et al. [3].</p>
+</li>
+<li>
+<p><strong>Continuous Learning and Adaptation</strong>: The system continuously records attack patterns, detection accuracy, and response efficacy. This data is used to refine the detection models and defense strategies, creating an adaptive security framework that evolves alongside emerging AI-driven threats.</p>
+</li>
+</ol>
+<p>Unlike traditional security systems that operate with static rule sets, our approach implements a dynamic feedback loop that enables continuous improvement of both detection and response mechanisms. This adaptive capability is essential for addressing the evolving nature of AI-generated attacks, which can rapidly change tactics to evade detection.</p>
+<h3 id="33-implementation-components">3.3 Implementation Components </h3>
+<h4 id="331-ryu-controller-with-ai-integration">3.3.1 Ryu Controller with AI Integration </h4>
+<p>Our implementation leverages specific Ryu controller modules and components to create an integrated defense system against AI-generated attacks. The implementation utilizes OpenFlow 1.3 for broad compatibility with existing network infrastructure while providing robust flow control capabilities.</p>
+<p><strong>Core Ryu Modules Utilized:</strong></p>
+<ol>
+<li>
+<p><strong><code>ryu.controller.ofp_event</code></strong>: Provides event handling for OpenFlow protocol messages, enabling our controller to respond to network events such as packet-in, flow-removed, and port-status changes. This module is essential for capturing and processing attack traffic in real-time.</p>
+</li>
+<li>
+<p><strong><code>ryu.ofproto.ofproto_v1_3</code></strong>: Implements OpenFlow 1.3 protocol specifications, which offers a balance between compatibility and advanced features including multiple flow tables and group tables. These capabilities are crucial for implementing sophisticated defense policies with fine-grained traffic control.</p>
+</li>
+<li>
+<p><strong><code>ryu.controller.dpset</code></strong>: Manages datapath connections and provides a centralized view of all connected switches. This module enables our controller to maintain a comprehensive network topology map and deploy defense measures across multiple network segments simultaneously.</p>
+</li>
+<li>
+<p><strong><code>ryu.lib.packet</code></strong>: Provides packet parsing and construction capabilities for various protocols (Ethernet, IP, TCP, UDP, ICMP). We extended this module with custom parsers specifically designed to identify patterns in AI-generated attack traffic, particularly focusing on TCP SYN flood detection with proper header analysis.</p>
+</li>
+<li>
+<p><strong><code>ryu.app.ofctl_rest</code></strong>: Implements a RESTful API interface that allows external systems to interact with the controller. We leverage this module to integrate our machine learning models and provide a management interface for security administrators.</p>
+</li>
+</ol>
+<p><strong>Custom Extensions and Components:</strong></p>
+<ol>
+<li>
+<p><strong><code>FlowStatCollector</code></strong>: A custom application that extends <code>ryu.app.simple_switch_13</code> to periodically collect flow statistics from all switches. This component implements the <code>OFPFlowStatsRequest</code> message handling to gather critical metrics including packet counts, byte counts, and duration for each flow.</p>
+</li>
+<li>
+<p><strong><code>AnomalyDetector</code></strong>: A specialized module that processes collected flow statistics and applies machine learning algorithms to identify potential attack patterns. This component integrates with TensorFlow through a custom adapter to apply our trained models for traffic classification, with particular emphasis on DDoS attack detection.</p>
+</li>
+<li>
+<p><strong><code>DynamicPolicyEngine</code></strong>: Translates detected threats into OpenFlow rules using <code>OFPFlowMod</code> messages with appropriate match fields and actions. This engine implements a priority-based rule deployment strategy to ensure critical defense measures take precedence over routine traffic management.</p>
+</li>
+<li>
+<p><strong><code>FeedbackCollector</code></strong>: Monitors the effectiveness of deployed defense measures by tracking flow removals, packet drops, and traffic patterns after rule deployment. This data is used to continuously refine the detection models and response strategies.</p>
+</li>
+<li>
+<p><strong><code>ResponseOrchestrator</code></strong>: Implements a multi-level response system based on the severity and confidence of detected threats. This component deploys graduated response measures ranging from increased monitoring (for suspicious but uncertain traffic) to complete traffic isolation (for confirmed attacks). The orchestrator leverages OpenFlow 1.3's group table capabilities to implement complex mitigation strategies while minimizing disruption to legitimate network operations.</p>
+</li>
+</ol>
+<p>The controller implementation uses Ryu's event-driven architecture to process network events asynchronously, enabling real-time response to detected threats while maintaining normal network operations. Our extensions to the core Ryu framework focus on enhancing its traffic analysis capabilities and integrating advanced machine learning models for attack detection, drawing inspiration from Scott-Hayward et al.'s [7] defense framework.</p>
+<h4 id="332-gpt-attack-mock-environment">3.3.2 GPT Attack Mock Environment </h4>
+<p>To evaluate our defense architecture against AI-generated attacks, we developed a GPT-driven attack simulation framework that leverages large language models to create diverse and realistic attack scenarios. This approach allows us to systematically test our SDN-based defense mechanisms against evolving AI-generated threats in a controlled environment.</p>
+<p>Our GPT-based attack generation methodology consists of five key components:</p>
+<ol>
+<li>
+<p><strong>Prompt Engineering for Attack Generation</strong>: We developed specialized prompt templates that guide GPT models to generate network attack scripts targeting specific vulnerabilities. These prompts include technical specifications of the target environment, desired attack type (e.g., DDoS, port scanning, ARP spoofing), and constraints on the attack implementation. By carefully crafting these prompts, we can control the sophistication and evasiveness of the generated attacks.</p>
+</li>
+<li>
+<p><strong>Multi-model Attack Diversity</strong>: To ensure comprehensive testing, we utilize five different large language models (ChatGPT, Claude, Grok AI, Gemini, and DeepSeek) to generate attack scripts. Each model produces attacks with unique characteristics and patterns, creating a diverse attack dataset that better represents the variety of real-world threats. This multi-model approach revealed interesting variations in attack strategies and implementation techniques across different AI systems.</p>
+</li>
+<li>
+<p><strong>Automated Script Processing Pipeline</strong>: We implemented a processing pipeline that takes the raw text output from GPT models and converts it into executable attack scripts. This pipeline includes code validation, dependency resolution, and parameter configuration to ensure that generated scripts can be deployed in our test environment. The pipeline also adds instrumentation for metrics collection and execution control.</p>
+</li>
+<li>
+<p><strong>Mininet-based Execution Environment</strong>: The generated attack scripts are deployed within a Mininet simulation environment that replicates realistic network topologies. Our implementation supports various network configurations, including enterprise networks with segmented departments, data centers with high-bandwidth connections, and IoT environments with numerous low-power devices. This flexibility allows us to test defense mechanisms under different network conditions and constraints.</p>
+</li>
+<li>
+<p><strong>Attack Pattern Analysis System</strong>: All traffic generated during attacks is captured and analyzed to identify unique signatures and patterns characteristic of AI-generated attacks. We developed a feature extraction system that processes network traffic data to identify distinguishing characteristics of attacks generated by different AI models. This analysis informs the development of more effective detection mechanisms specifically tailored to AI-generated threats.</p>
+</li>
+</ol>
+<p>The attack simulation framework is integrated with our SDN controller through a standardized API, allowing automated testing of defense mechanisms against newly generated attack variants. This approach enables continuous evaluation and improvement of our defense system as AI attack capabilities evolve.</p>
+<p>Our experimental results show that different GPT models produce attacks with distinct characteristics, ranging from highly sophisticated evasion techniques to more straightforward but aggressive approaches. This diversity in attack patterns presents unique challenges for detection systems, highlighting the need for adaptive defense mechanisms that can recognize and respond to the evolving nature of AI-generated threats.</p>
+<h2 id="results-and-analysis">Results and Analysis </h2>
+<h3 id="42-detection-performance">4.2 Detection Performance </h3>
+<h2 id="conclusion-and-future-work">Conclusion and Future Work </h2>
+<h3 id="51-summary-of-contributions">5.1 Summary of Contributions </h3>
+<h3 id="52-limitations">5.2 Limitations </h3>
+<h3 id="53-future-research-directions">5.3 Future Research Directions </h3>
+<h2 id="references">References </h2>
+<ol>
+<li>
+<p>Zhang, R., et al. "Artificial Intelligence in Cybersecurity: Enhancing Automated Defense Mechanisms to Combat Sophisticated Cyber Threats and Guarantee Digital Resilience," <em>IEEE Access</em>, vol. 9, pp. 108825-108847, 2021. <a href="https://ieeexplore.ieee.org/document/10923968">https://ieeexplore.ieee.org/document/10923968</a></p>
+</li>
+<li>
+<p>Ahmad, I., Namal, S., Ylianttila, M., and Gurtov, A. "Security in Software Defined Networks: A Survey," <em>IEEE Communications Surveys &amp; Tutorials</em>, vol. 17, no. 4, pp. 2317–2346, 2015. <a href="https://ieeexplore.ieee.org/document/7226783">https://ieeexplore.ieee.org/document/7226783</a></p>
+</li>
+<li>
+<p>Kreutz, D., Ramos, F.M.V., Verissimo, P.E., Rothenberg, C.E., Azodolmolky, S., and Uhlig, S. "Software-Defined Networking: A Comprehensive Survey," <em>Proceedings of the IEEE</em>, vol. 103, no. 1, pp. 14–76, 2015. <a href="https://ieeexplore.ieee.org/document/6994333">https://ieeexplore.ieee.org/document/6994333</a></p>
+</li>
+<li>
+<p>Scott-Hayward, S., O'Callaghan, G., and Sezer, S. "SDN Security: A Survey," <em>IEEE SDN for Future Networks and Services (SDN4FNS)</em>, pp. 1–7, 2013. <a href="https://ieeexplore.ieee.org/document/6702553">https://ieeexplore.ieee.org/document/6702553</a></p>
+</li>
+<li>
+<p>Apruzzese, G., Colajanni, M., Ferretti, L., Guido, A., and Marchetti, M. "On the effectiveness of machine and deep learning for cyber security," <em>2018 10th International Conference on Cyber Conflict (CyCon)</em>, pp. 371-390, 2018. <a href="https://ieeexplore.ieee.org/document/8405026">https://ieeexplore.ieee.org/document/8405026</a></p>
+</li>
+<li>
+<p>Sahu, S., Dash, S.R., Saxena, L., and Rahman, D. "Intrusion detection system in Software defined Network using machine learning approach - Survey," <em>2021 5th International Conference on Computing Methodologies and Communication (ICCMC)</em>, pp. 984-988, 2021. <a href="https://ieeexplore.ieee.org/document/9489141">https://ieeexplore.ieee.org/document/9489141</a></p>
+</li>
+<li>
+<p>Mijumbi, R., Serrat, J., Gorricho, J. L., Bouten, N., De Turck, F., and Boutaba, R. "Network Function Virtualization: State-of-the-Art and Research Challenges," <em>IEEE Communications Surveys &amp; Tutorials</em>, vol. 18, no. 1, pp. 236–262, 2016. <a href="https://ieeexplore.ieee.org/document/7243304">https://ieeexplore.ieee.org/document/7243304</a></p>
+</li>
+<li>
+<p>Rosenberg, I., Shabtai, A., Rokach, L., and Elovici, Y. "DeepAPT: Nation-State APT Attribution Using End-to-End Deep Neural Networks," <em>International Conference on Artificial Neural Networks</em>, pp. 91-99, 2017. <a href="https://link.springer.com/chapter/10.1007/978-3-319-68612-7_11">https://link.springer.com/chapter/10.1007/978-3-319-68612-7_11</a></p>
+</li>
+<li>
+<p>Bhuyan, M. H., Bhattacharyya, D. K., and Kalita, J. K. "Network Anomaly Detection: Methods, Systems and Tools," <em>IEEE Communications Surveys &amp; Tutorials</em>, vol. 16, no. 1, pp. 303-336, 2014. <a href="https://ieeexplore.ieee.org/abstract/document/6524462">https://ieeexplore.ieee.org/abstract/document/6524462</a></p>
+</li>
+<li>
+<p>Swami, R., Dave, M., and Ranga, V. "Software-defined Networking-based DDoS Defense Mechanisms," <em>ACM Computing Surveys (CSUR)</em>, vol. 52, no. 2, pp. 1-36, 2019. <a href="https://dl.acm.org/doi/abs/10.1145/3301614">https://dl.acm.org/doi/abs/10.1145/3301614</a></p>
+</li>
+<li>
+<p>Wang, M., Lu, Y., and Qin, J. "A dynamic MLP-based DDoS attack detection method using feature selection and feedback," <em>Computers &amp; Security</em>, vol. 88, pp. 101645, 2020. <a href="https://www.sciencedirect.com/science/article/pii/S0167404819301890">https://www.sciencedirect.com/science/article/pii/S0167404819301890</a></p>
+</li>
+<li>
+<p>Wang, X., Chen, M., and Xing, C. "SDSNM: A Software-Defined Security Networking Mechanism to Defend against DDoS Attacks," <em>2015 9th International Conference on Frontier of Computer Science and Technology (FCST)</em>, pp. 115-121, 2015. <a href="https://ieeexplore.ieee.org/abstract/document/7314660">https://ieeexplore.ieee.org/abstract/document/7314660</a></p>
+</li>
+<li>
+<p>McKeown, N., Anderson, T., Balakrishnan, H., Parulkar, G., Peterson, L., Rexford, J., Shenker, S., and Turner, J. "A network in a laptop: rapid prototyping for software-defined networks," <em>Proceedings of the 9th ACM SIGCOMM Workshop on Hot Topics in Networks</em>, pp. 1-6, 2010. <a href="https://dl.acm.org/doi/abs/10.1145/1868447.1868466">https://dl.acm.org/doi/abs/10.1145/1868447.1868466</a></p>
+</li>
+<li>
+<p>Shiravi, A., Shiravi, H., Tavallaee, M., and Ghorbani, A. A. "Toward developing a systematic approach to generate benchmark datasets for intrusion detection," <em>Computers &amp; Security</em>, vol. 31, no. 3, pp. 357-374, 2012. <a href="https://www.sciencedirect.com/science/article/pii/S0167404811001672">https://www.sciencedirect.com/science/article/pii/S0167404811001672</a></p>
+</li>
+<li>
+<p>Sharafaldin, I., Lashkari, A. H., and Ghorbani, A. A. "Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization," <em>Proceedings of the 4th International Conference on Information Systems Security and Privacy (ICISSP)</em>, pp. 108-116, 2018. <a href="https://www.scitepress.org/Papers/2018/66398/66398.pdf">https://www.scitepress.org/Papers/2018/66398/66398.pdf</a></p>
+</li>
+<li>
+<p>"Three Japanese high school students used ChatGPT to hack into Rakuten Mobile system," <em>TechBang</em>, 2023. <a href="https://www.techbang.com/posts/121694-three-japanese-high-school-students-used-chatgpt-to-hack-into">https://www.techbang.com/posts/121694-three-japanese-high-school-students-used-chatgpt-to-hack-into</a></p>
+</li>
+<li>
+<p>Zeng, X. "Research for current cloud computing and cloud security technology," <em>2010 International Conference on Internet Technology and Applications</em>, pp. 1-4, 2010. <a href="https://ieeexplore.ieee.org/document/5691706">https://ieeexplore.ieee.org/document/5691706</a></p>
+</li>
+</ol>
+<h2 id="相關新聞">相關新聞 </h2>
+<ul>
+<li><a href="https://www.techbang.com/posts/121694-three-japanese-high-school-students-used-chatgpt-to-hack-into">三名日本高中生利用 ChatGPT 協助駭入樂天行動系統，竊取 22 萬組帳密並成功申請超過一千張 eSIM 卡</a></li>
+<li><a href="https://www.ithome.com.tw/news/161764">研究人員揭露 ChatGPT 可用於存取第三方網站及敏感資料的漏洞</a></li>
+<li><a href="https://labs.withsecure.com/publications/generative-ai-an-attackers-view">生成式人工智慧 - 攻擊者的視角</a></li>
+</ul>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

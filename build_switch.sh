@@ -1,2 +1,1 @@
-
-ryu-manager ryu.app.wsgi ryu.app.rest_topology advanced_switch.py
+ryu-manager ryu.app.wsgi ryu.app.rest_topology simple_switch_advanced.py

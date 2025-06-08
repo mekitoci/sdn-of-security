@@ -76,11 +76,17 @@ class AdvancedSwitch(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         dpid = datapath.id
         
+        # 獲取交換機IP地址
+        switch_ip = datapath.address[0]  # address是一個tuple (ip, port)
+        switch_port = datapath.address[1]
+        
         # 清空所有現有流表
         self.clear_all_flows(datapath)
         
         self.logger.info("\n%s\n交換機 %s 連接成功，開始初始化進階功能\n%s", 
                         "="*30, dpid, "="*30)
+        self.logger.info("🌐 交換機IP地址: %s:%s", switch_ip, switch_port)
+        self.logger.info("🔗 交換機DPID: %s", dpid)
         
         # 初始化多表結構 (Multiple Tables)
         self.setup_multiple_tables(datapath)
