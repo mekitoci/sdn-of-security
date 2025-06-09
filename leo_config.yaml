@@ -1,0 +1,107 @@
+# 動態衛星 SDN 網路模擬配置文件
+# Configuration for Dynamic Satellite SDN Network Simulation
+
+# 網路基本參數 - 代碼中 _simulation_loop() 使用
+network:
+  simulation_duration: 3600  # 模擬持續時間（秒）
+  update_interval: 1         # 更新間隔（秒）- 代碼中用於模擬循環頻率
+  real_time_factor: 10       # 時間加速倍數
+
+# 衛星參數 - 代碼中 _initialize_satellite_orbits() 和 add_satellite() 使用
+satellites:
+  count: 18                  # 衛星數量 - 代碼中用於初始化衛星
+  altitude: 550              # 軌道高度（km）- 代碼中衛星位置計算使用
+  inclination: 53            # 軌道傾角（度）- 代碼中轉換為弧度使用
+  orbital_period: 3600       # 軌道週期（秒）- 代碼中計算軌道速率使用
+  inter_satellite_distance: 5000  # 星間最大通信距離（km）
+
+# 地面站參數 - 代碼中 SatelliteOrbitSimulator.__init__() 使用
+ground_stations:
+  count: 12                  # 地面站數量 (全球覆蓋網路)
+  coverage_radius: 1500      # 覆蓋半徑（km）
+  min_elevation_angle: 5     # 最小仰角（度）- 代碼中用於可見性計算
+  locations:                 # 代碼中遍歷此列表創建地面站
+    # 亞洲地區 (4站)
+    - name: "Taipei"          # 台北 (東亞)
+      latitude: 25.0330
+      longitude: 121.5654
+    - name: "Beijing"         # 北京 (東亞)
+      latitude: 39.9042
+      longitude: 116.4074
+    - name: "Tokyo"           # 東京 (東亞)
+      latitude: 35.6762
+      longitude: 139.6503
+    - name: "Mumbai"          # 孟買 (南亞)
+      latitude: 19.0760
+      longitude: 72.8777
+    # 歐洲地區 (2站)
+    - name: "London"          # 倫敦 (西歐)
+      latitude: 51.5074
+      longitude: -0.1278
+    - name: "Moscow"          # 莫斯科 (東歐)
+      latitude: 55.7558
+      longitude: 37.6176
+    # 北美洲 (2站)
+    - name: "NewYork"         # 紐約 (美國東岸)
+      latitude: 40.7128
+      longitude: -74.0060
+    - name: "LosAngeles"      # 洛杉磯 (美國西岸)
+      latitude: 34.0522
+      longitude: -118.2437
+    # 南美洲 (1站)
+    - name: "SaoPaulo"        # 聖保羅 (巴西)
+      latitude: -23.5505
+      longitude: -46.6333
+    # 非洲地區 (2站)
+    - name: "Cairo"           # 開羅 (北非)
+      latitude: 30.0444
+      longitude: 31.2357
+    - name: "Cape Town"       # 開普敦 (南非)
+      latitude: -33.9249
+      longitude: 18.4241
+    # 大洋洲 (1站)
+    - name: "Sydney"          # 雪梨 (澳洲)
+      latitude: -33.8688
+      longitude: 151.2093
+
+# 控制器參數 - 代碼中 _create_network() 使用
+controller:
+  ip: "192.168.1.101"        # 代碼中連接控制器的IP地址
+  port: 6653                 # 代碼中連接控制器的端口
+  protocol_version: "OpenFlow13"
+  flow_timeout: 10           # 流表超時時間（秒）
+
+# Mininet參數 - 代碼中 _create_link() 使用
+mininet:
+  switch_type: "ovsk"        # 交換機類型
+  link_bandwidth: 100        # 鏈路頻寬（Mbps）- 代碼中建立連接時使用
+  link_delay: "10ms"         # 鏈路延遲 - 代碼中建立連接時使用
+  link_loss: 0.05            # 丟包率（%）- 代碼中建立連接時使用
+
+# 以下為擴展配置，目前代碼中未使用，保留供未來開發
+
+# 路由算法參數（未使用）
+routing:
+  algorithm: "shortest_path"  # 路由算法：shortest_path, load_balance, delay_optimal
+  weight_factors:
+    distance: 0.4
+    congestion: 0.3
+    stability: 0.3
+  handover_threshold: 5      # 切換閾值（度）
+
+# 日誌配置（未使用）
+logging:
+  level: "INFO"              # 日誌級別：DEBUG, INFO, WARNING, ERROR
+  output_file: "leo_sim.log" # 日誌文件
+  console_output: true       # 是否控制台輸出
+
+# 性能監控（未使用）
+monitoring:
+  enable_statistics: true    # 啟用統計
+  statistics_interval: 10    # 統計間隔（秒）
+  metrics:
+    - "throughput"
+    - "latency"
+    - "packet_loss"
+    - "handover_frequency"
+    - "link_utilization"
