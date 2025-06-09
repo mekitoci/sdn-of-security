@@ -12,6 +12,7 @@ import json
 import yaml
 import math
 import threading
+import requests
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 
@@ -45,31 +46,36 @@ class SatelliteOrbitSimulator:
         self._initialize_satellite_orbits()
     
     def _initialize_satellite_orbits(self):
-        """初始化衛星軌道參數"""
+        """初始化衛星軌道參數 - 確保覆蓋所有地面站"""
         sat_config = self.config['satellites']
         num_satellites = sat_config['count']
         altitude = sat_config['altitude']
-        inclination = sat_config['inclination']
-        orbital_period = sat_config['orbital_period']
+        
+        # 使用更大的傾斜角確保能覆蓋亞太地區所有地面站
+        # 地面站緯度範圍大約是 -7° (雅加達) 到 43° (札幌)
+        inclination = 60  # 使用60度傾斜角，確保覆蓋範圍足夠
+        
+        # 調整軌道週期使其更容易觀察衛星經過地面站
+        orbital_period = 600  # 10分鐘一圈，比真實LEO衛星快很多，便於觀察
         
         # 均勻分佈衛星在軌道上
         for i in range(num_satellites):
             satellite_id = f"SAT{i+1}"
-            # 計算初始軌道相位
+            # 計算初始軌道相位，確保衛星分散在不同位置
             initial_phase = (2 * math.pi * i) / num_satellites
             
             self.satellites[satellite_id] = {
                 'id': satellite_id,
                 'altitude': altitude,
-                'inclination': math.radians(inclination),
-                'orbital_period': orbital_period,
+                'inclination': math.radians(inclination),  # 60度傾斜角
+                'orbital_period': orbital_period,  # 10分鐘軌道週期
                 'initial_phase': initial_phase,
                 'active': True,
                 'connected_gs': None
             }
     
     def get_satellite_position(self, satellite_id: str, time_offset: float) -> Tuple[float, float, float]:
-        """計算衛星在指定時間的位置 (緯度, 經度, 高度)"""
+        """計算衛星在指定時間的位置 (緯度, 經度, 高度) - 改進版確保經過地面站"""
         if satellite_id not in self.satellites:
             return None
         
@@ -77,13 +83,22 @@ class SatelliteOrbitSimulator:
         if not sat['active']:
             return None
         
-        # 簡化的軌道計算 - 圓形軌道
+        # 軌道計算 - 確保衛星會經過地面站區域
         orbital_rate = 2 * math.pi / sat['orbital_period']  # rad/s
         current_angle = sat['initial_phase'] + orbital_rate * time_offset
         
-        # 計算衛星位置
-        lat = math.degrees(math.asin(math.sin(sat['inclination']) * math.sin(current_angle)))
-        lon = math.degrees(current_angle) % 360
+        # 計算緯度 - 使用正弦波在 -傾斜角 到 +傾斜角 之間振蕩
+        max_lat = math.degrees(sat['inclination'])  # 最大緯度等於軌道傾斜角
+        lat = max_lat * math.sin(current_angle)
+        
+        # 計算經度 - 考慮地球自轉，確保衛星會掃過所有經度
+        # 地球自轉角速度約為 7.27e-5 rad/s (360°/24小時)
+        earth_rotation_rate = 2 * math.pi / (24 * 3600)  # rad/s
+        
+        # 衛星相對地面的經度變化（考慮地球自轉）
+        lon_satellite = math.degrees(current_angle * 0.5)  # 降低軌道速度使其更容易觀察
+        lon_earth_rotation = math.degrees(earth_rotation_rate * time_offset)
+        lon = (lon_satellite - lon_earth_rotation) % 360
         if lon > 180:
             lon -= 360
         
@@ -112,8 +127,7 @@ class SatelliteOrbitSimulator:
     
     def _calculate_elevation_angle(self, sat_lat: float, sat_lon: float, sat_alt: float,
                                  gs_lat: float, gs_lon: float) -> float:
-        """計算衛星對地面站的仰角"""
-        # 簡化計算 - 實際應用中需要更精確的球面幾何計算
+        """計算衛星對地面站的仰角 - 改進版，更容易達到可見條件"""
         # 計算地面距離
         lat_diff = math.radians(sat_lat - gs_lat)
         lon_diff = math.radians(sat_lon - gs_lon)
@@ -125,11 +139,28 @@ class SatelliteOrbitSimulator:
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
         ground_distance = self.earth_radius * c
         
-        # 計算仰角
+        # 計算仰角 - 改進的幾何關係
         if ground_distance == 0:
             return 90.0  # 直接頭頂
         
-        elevation = math.degrees(math.atan(sat_alt / ground_distance))
+        # 考慮地球曲率的更精確計算
+        # 計算地心角
+        earth_center_angle = ground_distance / self.earth_radius
+        
+        # 計算仰角（考慮地球是球體）
+        cos_elevation = math.sin(earth_center_angle) * self.earth_radius / (self.earth_radius + sat_alt)
+        
+        if abs(cos_elevation) <= 1.0:
+            elevation = 90 - math.degrees(math.acos(abs(cos_elevation)))
+        else:
+            # 衛星在地平線以下
+            elevation = 0
+        
+        # 為了更容易觀察到衛星經過，我們放寬可見距離
+        # 如果距離小於2000km，就認為可能可見
+        if ground_distance < 2000:  # 2000km以內都算可見範圍
+            elevation = max(elevation, 5.0)  # 最小給5度仰角
+        
         return max(0, elevation)
     
     def get_active_satellites(self, time_offset: float) -> List[str]:
@@ -193,8 +224,36 @@ class DynamicSatelliteTopology:
         # 線程鎖保護網路操作
         self.network_lock = threading.Lock()
         
+        # SDN 控制器通信
+        ngrok_url = self.config['controller']['ngrok']
+        self.controller_url = f"https://{ngrok_url}"
+        info(f"🌐 SDN 控制器 URL: {self.controller_url}\n")
+        
+        # 地面站連接狀態追蹤
+        self.ground_station_connections = {}  # {gs_name: {sat_id: True/False}}
+        self._initialize_connection_tracking()
+        
         # 創建 Mininet 網路
         self._create_network()
+    
+    def _get_ngrok_headers(self):
+        """獲取 ngrok 所需的 headers（基於成功的測試配置）"""
+        return {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",  # 跳過 ngrok 瀏覽器警告
+            "User-Agent": "SatelliteSDN-Simulator/1.0"
+        }
+    
+    def _initialize_connection_tracking(self):
+        """初始化地面站連接狀態追蹤"""
+        for gs_config in self.config['ground_stations']['locations']:
+            gs_name = gs_config['name']
+            self.ground_station_connections[gs_name] = {}
+            
+            # 初始化所有衛星與該地面站的連接狀態為 False
+            for i in range(self.config['satellites']['count']):
+                sat_id = f"SAT{i+1}"
+                self.ground_station_connections[gs_name][sat_id] = False
     
     def _create_network(self):
         """創建基礎 Mininet 網路 - 基於成功的測試配置"""
@@ -217,7 +276,7 @@ class DynamicSatelliteTopology:
             port=controller_config['port']  # 6653
         )
         
-        info(f"*** 控制器設定: {controller_config['ip']}:{controller_config['port']}\n")
+        info(f"*** 控制器設定: {controller_config['ngrok']}:{controller_config['port']}\n")
         
         # 初始化地面站
         self._setup_ground_stations()
@@ -429,21 +488,240 @@ class DynamicSatelliteTopology:
         info("***   flows - 查看流表\n")
     
     def _simulation_loop(self):
-        """模擬主循環 - 簡化版本"""
+        """模擬主循環 - 基於地面站區域檢測和位置更新"""
         update_interval = self.config['network']['update_interval']
         
         while self.simulation_running:
             current_time = time.time() - self.start_time
             
-            # 簡化：只更新狀態信息，不修改網路拓撲
+            # 更新衛星狀態
             self._update_satellite_status(current_time)
+            
+            # 檢測地面站區域連接狀態變化
+            self._check_ground_station_connections(current_time)
+            
+            # 定期發送位置信息到 SDN 控制器（每次循環都發送）
+            self._send_position_updates(current_time)
             
             time.sleep(update_interval)
     
     def _update_satellite_status(self, current_time: float):
         """更新衛星狀態 (僅用於狀態顯示)"""
-        # 只更新狀態信息，避免動態網路修改導致的併發問題
-        pass
+        # 更新每個衛星的狀態信息
+        for sat_id in self.satellites.keys():
+            if sat_id in self.orbit_simulator.satellites:
+                sat_info = self.orbit_simulator.satellites[sat_id]
+                if sat_info['active']:
+                    # 計算當前位置
+                    position = self.orbit_simulator.get_satellite_position(sat_id, current_time)
+                    if position:
+                        sat_info['current_position'] = position
+                        # 計算可見地面站
+                        visible_stations = self.orbit_simulator.calculate_visibility(sat_id, current_time)
+                        sat_info['visible_stations'] = visible_stations
+    
+    def _check_ground_station_connections(self, current_time: float):
+        """檢測地面站連接狀態變化並通知 SDN 控制器"""
+        try:
+            for gs_config in self.config['ground_stations']['locations']:
+                gs_name = gs_config['name']
+                
+                for sat_id in self.satellites.keys():
+                    if sat_id in self.orbit_simulator.satellites:
+                        sat_info = self.orbit_simulator.satellites[sat_id]
+                        if sat_info['active']:
+                            # 計算衛星是否在地面站區域內
+                            is_in_range = self._is_satellite_in_ground_station_range(
+                                sat_id, gs_name, current_time
+                            )
+                            
+                            # 檢查狀態是否變化
+                            previous_state = self.ground_station_connections[gs_name].get(sat_id, False)
+                            
+                            if is_in_range != previous_state:
+                                # 狀態發生變化，通知 SDN 控制器
+                                self._notify_connection_change(sat_id, gs_name, is_in_range)
+                                
+                                # 更新本地狀態
+                                self.ground_station_connections[gs_name][sat_id] = is_in_range
+                                
+                                # 打印狀態變化信息
+                                status = "進入區域" if is_in_range else "離開區域"
+                                info(f"*** {sat_id} {status} {gs_name} 地面站\n")
+                                
+        except Exception as e:
+            info(f"地面站連接檢測錯誤: {e}\n")
+    
+    def _is_satellite_in_ground_station_range(self, sat_id: str, gs_name: str, current_time: float) -> bool:
+        """判斷衛星是否在地面站偵測範圍內"""
+        try:
+            # 獲取衛星位置
+            sat_position = self.orbit_simulator.get_satellite_position(sat_id, current_time)
+            if not sat_position:
+                return False
+            
+            sat_lat, sat_lon, sat_alt = sat_position
+            
+            # 獲取地面站信息
+            gs_config = None
+            for gs_cfg in self.config['ground_stations']['locations']:
+                if gs_cfg['name'] == gs_name:
+                    gs_config = gs_cfg
+                    break
+            
+            if not gs_config:
+                return False
+            
+            # 計算仰角
+            elevation = self.orbit_simulator._calculate_elevation_angle(
+                sat_lat, sat_lon, sat_alt,
+                gs_config['latitude'], gs_config['longitude']
+            )
+            
+            # 判斷是否在偵測範圍內（基於仰角閾值）
+            min_elevation = self.config['ground_stations']['min_elevation_angle']
+            return elevation >= min_elevation
+            
+        except Exception as e:
+            info(f"範圍檢測錯誤: {e}\n")
+            return False
+    
+    def _notify_connection_change(self, sat_id: str, gs_name: str, is_connected: bool):
+        """通知 SDN 控制器地面站連接狀態變化"""
+        try:
+            # 獲取衛星的 DPID
+            if sat_id in self.satellites:
+                switch = self.satellites[sat_id]
+                dpid = int(switch.name.replace('s', ''))  # 從 's1' 提取 '1'
+                
+                # 準備數據
+                notification_data = {
+                    'type': 'connection_change',
+                    'satellite': {
+                        'id': sat_id,
+                        'dpid': dpid
+                    },
+                    'ground_station': {
+                        'name': gs_name
+                    },
+                    'connected': is_connected,
+                    'timestamp': time.time()
+                }
+                
+                # 發送到 SDN 控制器（使用修正的 URL 和 headers）
+                headers = self._get_ngrok_headers()
+                response = requests.post(
+                    f"{self.controller_url}/api/ground_station_update",  # 移除 /satellite 前綴
+                    json=notification_data,
+                    headers=headers,
+                    timeout=10,  # 增加 timeout
+                    verify=False  # 跳過 SSL 驗證
+                )
+                
+                if response.status_code == 200:
+                    info(f"📡 連接狀態通知成功: {sat_id} -> {gs_name} ({is_connected})\n")
+                else:
+                    info(f"❌ 連接狀態通知失敗: HTTP {response.status_code} - {response.text}\n")
+                    
+        except requests.exceptions.SSLError as e:
+            # SSL 錯誤，嘗試重試不驗證 SSL
+            try:
+                headers = self._get_ngrok_headers()
+                response = requests.post(
+                    f"{self.controller_url}/api/ground_station_update",
+                    json=notification_data,
+                    headers=headers,
+                    timeout=10,
+                    verify=False  # 跳過 SSL 驗證
+                )
+                if response.status_code == 200:
+                    info(f"📡 連接狀態通知成功 (重試): {sat_id} -> {gs_name} ({is_connected})\n")
+            except Exception:
+                pass  # 靜默處理重試失敗
+        except requests.exceptions.RequestException as e:
+            # 網路錯誤，靜默處理
+            pass
+        except Exception as e:
+            info(f"連接狀態通知錯誤: {e}\n")
+    
+    def _send_position_updates(self, current_time: float):
+        """發送位置更新到 SDN 控制器"""
+        try:
+            # 收集所有衛星位置信息
+            position_data = {
+                'timestamp': current_time,
+                'satellites': {},
+                'ground_stations': {}
+            }
+            
+            # 添加衛星位置信息
+            for sat_id in self.satellites.keys():
+                if sat_id in self.orbit_simulator.satellites:
+                    sat_info = self.orbit_simulator.satellites[sat_id]
+                    if sat_info['active']:
+                        position = self.orbit_simulator.get_satellite_position(sat_id, current_time)
+                        if position:
+                            # 獲取衛星的 DPID (交換機 ID)
+                            switch = self.satellites[sat_id]
+                            dpid = int(switch.name.replace('s', ''))  # 從 's1' 提取 '1'
+                            
+                            position_data['satellites'][dpid] = {
+                                'id': sat_id,
+                                'dpid': dpid,
+                                'latitude': position[0],
+                                'longitude': position[1],
+                                'altitude': position[2],
+                                'visible_stations': self.orbit_simulator.calculate_visibility(sat_id, current_time)
+                            }
+            
+            # 添加地面站位置信息 (固定位置)
+            for i, gs_config in enumerate(self.config['ground_stations']['locations']):
+                position_data['ground_stations'][gs_config['name']] = {
+                    'name': gs_config['name'],
+                    'latitude': gs_config['latitude'],
+                    'longitude': gs_config['longitude'],
+                    'detection_range': self.config['ground_stations'].get('detection_range', 1000),
+                    'elevation_threshold': self.config['ground_stations']['min_elevation_angle']
+                }
+            
+            # 發送到 SDN 控制器（使用修正的 URL 和 headers）
+            headers = self._get_ngrok_headers()
+            response = requests.post(
+                f"{self.controller_url}/api/position_update",  # 移除 /satellite 前綴
+                json=position_data,
+                headers=headers,
+                timeout=15,  # 增加 timeout
+                verify=False  # 跳過 SSL 驗證
+            )
+            
+            if response.status_code == 200:
+                info(f"🛰️ 位置更新發送成功！衛星數量: {len(position_data['satellites'])}\n")
+            else:
+                info(f"❌ 位置更新發送失敗: HTTP {response.status_code} - {response.text}\n")
+                info(f"   請求 URL: {self.controller_url}/api/position_update\n")
+                
+        except requests.exceptions.SSLError as e:
+            # SSL 錯誤，嘗試重試不驗證 SSL
+            try:
+                headers = self._get_ngrok_headers()
+                response = requests.post(
+                    f"{self.controller_url}/api/position_update",
+                    json=position_data,
+                    headers=headers,
+                    timeout=15,
+                    verify=False  # 跳過 SSL 驗證
+                )
+                if response.status_code == 200:
+                    info(f"🛰️ 位置更新發送成功 (重試)！衛星數量: {len(position_data['satellites'])}\n")
+                else:
+                    info(f"❌ 位置更新重試失敗: HTTP {response.status_code}\n")
+            except Exception:
+                info(f"🌐 SSL 錯誤且重試失敗，跳過本次更新\n")
+        except requests.exceptions.RequestException as e:
+            info(f"🌐 網路連接錯誤 (位置更新): {e}\n")
+            info(f"   檢查 ngrok URL: {self.controller_url}\n")
+        except Exception as e:
+            info(f"❌ 位置更新錯誤: {e}\n")
     
     def add_satellite(self, sat_id: str):
         """動態添加衛星"""
